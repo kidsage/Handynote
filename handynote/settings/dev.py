@@ -31,7 +31,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         # 'ENGINE': 'django_postgres_extensions.backends.postgresql',
-        'NAME': 'handynote',
+        'NAME': 'handynote_dev',
         'USER': db_id,
         'PASSWORD': db_pw,
         'HOST': 'localhost',
