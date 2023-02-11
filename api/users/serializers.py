@@ -10,8 +10,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # profile = ProfileSerializer(required=True)
+    profile = ProfileSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ['email', 'password'] #, 'profile']
+        fields = ['email', 'password', 'profile']
