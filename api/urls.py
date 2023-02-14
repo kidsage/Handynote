@@ -8,9 +8,9 @@ router.register(r'user', UserViewSet)
 router.register(r'profile', ProfileViewSet)
 router.register(r'post', PostViewSet)
 router.register(r'comment', CommentViewSet)
-# router.register(r'catetag')
+router.register(r'category', CategoryViewSet)
+router.register(r'tag', TagViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path(r'catetag/', CateTagAPIView.as_view(), name='catetag')
 ]
