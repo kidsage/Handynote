@@ -35,15 +35,15 @@ class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer
 
 
-# class CateTagAPIView(APIView):
-#     def get(self, request, *args, **kwargs):
-#         cateList = Category.objects.all()
-#         tagList = Tag.objects.all()
+class CateTagAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        cateList = Category.objects.all()
+        tagList = Tag.objects.all()
 
-#         data = {
-#             'cateList': cateList,
-#             'tagList': tagList,
-#         }
+        data = {
+            'cateList': cateList,
+            'tagList': tagList,
+        }
 
-#         serializer = CateTagSerializer(instance=data)
-#         return Response(serializer.data)
+        serializer = CateTagSerializer(instance=data)
+        return Response(serializer.data)

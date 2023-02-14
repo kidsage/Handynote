@@ -12,4 +12,5 @@ router.register(r'comment', CommentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path(r'catetag/', CateTagAPIView.as_view(), name='catetag')
 ]
