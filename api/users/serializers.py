@@ -6,7 +6,7 @@ from django.contrib.auth.models import update_last_login
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['nickname', 'image', 'phonenumber', 'introduce']
+        fields = ['user', 'nickname', 'image', 'phonenumber', 'introduce']
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -14,4 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'profile']
+        fields = ['email', 'password', 'profile', 'is_active']
+
+    # def login(self, validated_data):
+
+
+
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
