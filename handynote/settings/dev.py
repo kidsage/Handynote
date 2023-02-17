@@ -40,10 +40,13 @@ DATABASES = {
 }
 
 SIMPLE_JWT = {
+    "TOKEN_OBTAIN_SERIALIZER": "api.users.token.MyTokenObtainPairSerializer",
+
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
     'TOKEN_USER_CLASS': AUTH_USER_MODEL, # 자신의 User 모델 연결
 
     'AUTH_HEADER_TYPES': ('Bearer',),
