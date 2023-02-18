@@ -2,7 +2,8 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly
+from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -14,9 +15,6 @@ from .permissions import IsSelf
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    serializer_classes = {
-        'login': UserLoginSerializer,
-    }
     
     def get_permissions(self):
         permission_classes = []
@@ -51,6 +49,24 @@ class UserViewSet(ModelViewSet):
             )
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+# class LogoutViewSet(ModelViewSet):
+#     queryset = User
+#     serializer_class = LogoutSerializer
+#     permission_classes = [IsAuthenticated]
+
+
+class LogoutAPIView(GenericAPIView):
+    serializer_class = LogoutSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # user data를 넣어서 지원할 수 있도록 세팅할 예정
