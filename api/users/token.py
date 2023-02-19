@@ -7,7 +7,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         # Add custom claims
-        token['email'] = user.email
+        # token['email'] = user.email
         # profile data 넘겨줘야 하나?
 
         return token
