@@ -26,48 +26,6 @@ class UserViewSet(ModelViewSet):
             permission_classes = [IsSelf | IsAdminUser]
         return [permission() for permission in permission_classes]
 
-    @action(detail=False, methods=['post'])
-    def login(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        data = serializer.data
-        user = authenticate(email=data['email'], password=data['password'])
-
-        token = RefreshToken.for_user(user['email'])
-        refresh = str(token)
-        access = str(token.access_token)
-
-        if user is not None:
-            return Response (
-                { 
-                    'user': user,
-                    'access': access,
-                    'refresh': refresh,
-                },
-                status=status.HTTP_200_OK,
-            )
-        else:
-            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-# class LogoutViewSet(ModelViewSet):
-#     queryset = User
-#     serializer_class = LogoutSerializer
-#     permission_classes = [IsAuthenticated]
-
-
-class LogoutAPIView(GenericAPIView):
-    serializer_class = LogoutSerializer
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 # user data를 넣어서 지원할 수 있도록 세팅할 예정
 class ProfileViewSet(ModelViewSet): 
