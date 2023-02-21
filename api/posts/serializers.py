@@ -11,7 +11,7 @@ class PostSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['content', 'parent']
 
 
 class CategorySerializer(serializers.ModelSerializer):
