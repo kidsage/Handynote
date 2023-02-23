@@ -51,7 +51,7 @@ class Comment(models.Model):
         return self.short_content
 
     class Meta:
-        ordering=['-date_posted']
+        ordering = ['-updated_at']
 
     @property
     def children(self):
