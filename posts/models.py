@@ -4,14 +4,11 @@ from users.models import User
 # Create your models here.
 class Post(models.Model):
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, blank=True, null=True)
-    tags = models.ManyToManyField('Tag', blank=True)
     title = models.CharField('TITLE', max_length=50)
-    description = models.CharField('DESCRIPTION', max_length=100, blank=True, help_text='simple one-line text')
-    image = models.ImageField('IMAGE', upload_to='blog/%Y/%m/', blank=True, null=True)
+    image = models.ImageField('IMAGE', upload_to='post/%Y/%m/', blank=True, null=True)
     content = models.TextField('CONTENT')
     created_at = models.DateTimeField('CREATED AT', auto_now_add=True)
     updated_at = models.DateTimeField('UPDATED AT', auto_now=True)
-    like = models.PositiveSmallIntegerField('LIKE', default=0)
 
     class Meta:
         ordering = ('updated_at', )
@@ -23,13 +20,6 @@ class Post(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField('DESCRIPTION', max_length=100, blank=True, help_text='simple one-line text')
-
-    def __str__(self):
-        return self.name
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
