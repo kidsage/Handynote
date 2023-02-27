@@ -30,11 +30,6 @@ class PostViewSet(ModelViewSet):
         return Response(instance.like)
 
 
-class CommentViewSet(ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-
-
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer

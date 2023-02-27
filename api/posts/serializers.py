@@ -8,12 +8,6 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'image', 'like', 'category']
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = ['post', 'user', 'content', 'parent']
-
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
