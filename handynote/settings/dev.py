@@ -42,8 +42,8 @@ DATABASES = {
 SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "api.users.token.MyTokenObtainPairSerializer",
 
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
