@@ -3,6 +3,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from posts.models import *
 from .serializers import *
+from drf_spectacular.views import (
+    SpectacularJSONAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+    SpectacularYAMLAPIView
+)
 
 #
 class PostViewSet(ModelViewSet):
