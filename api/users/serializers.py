@@ -1,7 +1,5 @@
 from users.models import *
 from rest_framework import serializers
-# from django.contrib.auth.models import update_last_login
-from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 #
 class ProfileSerializer(serializers.ModelSerializer):

@@ -12,4 +12,6 @@ router.register(r'category', CategoryViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('login/', LoginAPIView.as_view(), name='login'),
+    path('logout/', LogoutAPIView.as_view(), name='logout'),
 ]
