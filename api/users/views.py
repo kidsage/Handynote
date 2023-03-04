@@ -28,6 +28,17 @@ class UserViewSet(ModelViewSet):
             permission_classes = [IsSelf | IsAdminUser]
         return [permission() for permission in permission_classes]
     
+    def logout(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+        except KeyError:
+            return Response({"error": "refresh_token is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+
+        return Response({"success": "Logout success"}, status=status.HTTP_200_OK)
+    
 
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]
