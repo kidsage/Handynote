@@ -31,9 +31,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    # login, out 기능 api/users/views.py 에서 apiview로 구현한 후 대체
-    # path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # Open API 자체를 조회 : json, yaml, 
     path("docs/json/", SpectacularJSONAPIView.as_view(), name="schema-json"),
     path("docs/yaml/", SpectacularYAMLAPIView.as_view(), name="swagger-yaml"),
