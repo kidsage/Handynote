@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = 'user'
-    
+        ordering = ['-pk']
 
 
 class Profile(models.Model):
