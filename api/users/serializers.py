@@ -17,3 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField(max_length=255)

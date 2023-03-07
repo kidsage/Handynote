@@ -21,6 +21,9 @@ from .permissions import IsSelf
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    serializer_classes = {
+        'logout': LogoutSerializer,
+    }
     authentication_classes = [JWTAuthentication]
     
     def get_permissions(self):
@@ -36,6 +39,12 @@ class UserViewSet(ModelViewSet):
         else:
             permission_classes = [IsSelf | IsAdminUser]
         return [permission() for permission in permission_classes]
+    
+    def get_serializer_class(self):
+        if hasattr(self, 'serializer_classes'):
+            return self.serializer_classes.get(self.action, self.serializer_class)
+        
+        return super().get_serializer_class()
     
     @action(detail=False, methods=['post'])
     def login(self, request):
@@ -59,6 +68,7 @@ class UserViewSet(ModelViewSet):
         else:
             return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
+    # refresh data를 넘겨줘야 하는데, serializer가 달라
     @action(detail=False, methods=['post'])
     def logout(self, request):
         refresh_token = request.data.get('refresh')
