@@ -79,3 +79,10 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+# MARKDOWN SETTINGS
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.extra',
+    'markdown.extensions.codehilite',
+    'markdown.extensions.toc',
+]
