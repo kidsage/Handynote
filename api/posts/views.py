@@ -16,7 +16,6 @@ class PostViewSet(ModelViewSet):
     # }
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-
     def get_queryset(self):
         return Post.objects.all().select_related('category')
     
@@ -26,6 +25,23 @@ class PostViewSet(ModelViewSet):
         
         return super().get_serializer_class()
     
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            for item in serializer.data:
+                item['content'] = markdownify(item['content'])
+
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        for item in serializer.data:
+            item['content'] = markdownify(item['content'])
+            
+        return Response(serializer.data)
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
