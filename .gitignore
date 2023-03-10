@@ -274,3 +274,5 @@ GitHub.sublime-settings
 
 # Custom
 secret.json
+static/
+staticfiles/
