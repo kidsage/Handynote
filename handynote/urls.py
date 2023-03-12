@@ -37,6 +37,8 @@ urlpatterns = [
     # Open API Document UI로 조회: Swagger, Redoc
     path("docs/swagger/", SpectacularSwaggerView.as_view(url_name="schema-json"), name="swagger-ui",),
     path("docs/redoc/", SpectacularRedocView.as_view(url_name="schema-json"), name="redoc",),
+    # Markdownx > python 4.0 이상에서는 url 지원하지 않는다.
+    # path('markdownx/', include('markdownx.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
