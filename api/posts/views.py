@@ -11,9 +11,6 @@ from .serializers import *
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    # serializer_classes = {
-    #     ''
-    # }
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
@@ -48,10 +45,6 @@ class PostViewSet(ModelViewSet):
         content = markdownify(instance.content)
 
         return Response({**serializer.data, 'content': content})
-    
-    # 나만 쓸 수 있는 포스트를 따로 구현할건데, viewset을 하나 더 파는게 나으려나?
-    # @action(detail=True)
-    # def my_post(self, request):
 
 
 class CategoryViewSet(ModelViewSet):
