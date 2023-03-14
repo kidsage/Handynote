@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/widgets/home_screen.dart';
+import 'package:front/screens/home_screen.dart';
 
 void main() => runApp(const HandyNote());
 
@@ -8,7 +8,7 @@ class HandyNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: "HandyNote",
       home: MyHomeScreen(),
     );
