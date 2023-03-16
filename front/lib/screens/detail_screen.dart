@@ -32,7 +32,7 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Future<void> loadMemo(int id) async {
-    final response = await http.get(Uri.parse('$HandynoteApi.baseUrl/$id/'));
+    final response = await http.get(Uri.parse('${HandynoteApi.baseUrl}/$id'));
     final HandynoteModel memo =
         HandynoteModel.fromJson(jsonDecode(response.body));
     _titleController.text = memo.title;
