@@ -6,7 +6,7 @@ class HandynoteApi {
   static const String baseUrl = 'http://127.0.0.1:8000/api/post';
 
   // Read(GET)
-  static Future<List<HandynoteModel>> getMemo() async {
+  static Future<List<HandynoteModel>> getMemos() async {
     List<HandynoteModel> noteInstances = [];
     final url = Uri.parse(baseUrl);
     final response = await http.get(url);

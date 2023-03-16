@@ -1,8 +1,9 @@
 class HandynoteModel {
-  final String id, title, user, category, content;
+  final int id;
+  final String title, user, category, content;
 
   HandynoteModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'].toString(),
+      : id = json['id'],
         title = json['title'],
         user = json['user'].toString(),
         category = json['category'].toString(),

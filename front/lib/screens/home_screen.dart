@@ -1,63 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:front/models/handynote_model.dart';
+import 'package:front/screens/detail_screen.dart';
 import 'package:front/services/api_service.dart';
 
-import '../widgets/handynote_widget.dart';
+class MyHomeScreen extends StatefulWidget {
+  const MyHomeScreen({super.key});
 
-class MyHomeScreen extends StatelessWidget {
-  MyHomeScreen({super.key});
+  @override
+  State<MyHomeScreen> createState() => _MyHomeScreenState();
+}
 
-  final Future<List<HandynoteModel>> memos = ApiService.getHandynoteList();
+class _MyHomeScreenState extends State<MyHomeScreen> {
+  List<dynamic> _memoList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadMemos();
+  }
+
+  Future<void> loadMemos() async {
+    final memoList = await HandynoteApi.getMemos();
+    setState(() {
+      _memoList = memoList;
+    });
+  }
+
+  void _showMemoDetail(int? id) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return DetailScreen(
+            id: id,
+          );
+        },
+      ),
+    ).then((_) {
+      loadMemos();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('메모 리스트'),
+        title: const Text('Memo List'),
       ),
-      body: FutureBuilder(
-        future: memos,
-        // UI
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // optimized listview
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                // ListView는 높이가 무제한이라 제한을 두기 위해 expanded를 사용
-                Expanded(child: makeList(snapshot)),
-              ],
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
+      body: ListView.builder(
+        itemCount: _memoList.length,
+        itemBuilder: (BuildContext context, int index) {
+          var memo = _memoList[index];
+          return ListTile(
+            title: Text(memo.title),
+            subtitle: Text(memo.content),
+            onTap: () {
+              _showMemoDetail(memo.id);
+            },
           );
         },
       ),
-    );
-  }
-
-  ListView makeList(AsyncSnapshot<List<HandynoteModel>> snapshot) {
-    return ListView.separated(
-      //builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: snapshot.data!.length,
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      itemBuilder: (context, index) {
-        // print(index);
-        var memo = snapshot.data![index];
-        return Memo(
-          id: memo.id,
-          title: memo.title,
-          user: memo.user,
-          category: memo.category,
-          content: memo.content,
-        );
-      },
-      separatorBuilder: (context, index) => const SizedBox(
-        width: 20,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showMemoDetail(null);
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
