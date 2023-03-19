@@ -5,7 +5,7 @@ from markdownx.models import MarkdownxField
 # Create your models here.
 class Post(models.Model):
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, blank=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    # user = models.ForeignKey(User, on_delete=models.PROTECT)
     title = models.CharField('TITLE', max_length=50)
     # image = models.ImageField('IMAGE', upload_to='post/%Y/%m/', blank=True, null=True)
     content = MarkdownxField()
