@@ -6,3 +6,6 @@
 
 ### API DOCS
 > localhost:8000/docs/swagger
+
+## 진행상황
+> 230318 / API 완성 후 front(flutter) 작업 진행 중
