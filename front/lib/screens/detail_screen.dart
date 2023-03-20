@@ -21,7 +21,6 @@ class _DetailScreenState extends State<DetailScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
-  final TextEditingController _userController = TextEditingController();
 
   @override
   void initState() {
@@ -34,10 +33,9 @@ class _DetailScreenState extends State<DetailScreen> {
   Future<void> loadMemo(int id) async {
     final response = await http.get(Uri.parse('${HandynoteApi.baseUrl}/$id'));
     final HandynoteModel memo =
-        HandynoteModel.fromJson(jsonDecode(response.body));
+        HandynoteModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     _titleController.text = memo.title;
     _contentController.text = memo.content;
-    _userController.text = memo.user;
     _categoryController.text = memo.category;
   }
 
@@ -45,12 +43,11 @@ class _DetailScreenState extends State<DetailScreen> {
     final title = _titleController.text;
     final content = _contentController.text;
     final category = _categoryController.text;
-    final user = _userController.text;
 
     if (widget.id != null) {
       await HandynoteApi.updateMemo(widget.id!, title, category, content);
     } else {
-      await HandynoteApi.createMemo(title, user, category, content);
+      await HandynoteApi.createMemo(title, category, content);
     }
     if (!mounted) return;
     Navigator.pop(context);

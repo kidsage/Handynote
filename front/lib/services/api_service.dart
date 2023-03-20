@@ -11,7 +11,8 @@ class HandynoteApi {
     final url = Uri.parse(baseUrl);
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      final Map<String, dynamic> map = jsonDecode(response.body);
+      final Map<String, dynamic> map =
+          jsonDecode(utf8.decode(response.bodyBytes));
       final List<dynamic> notes = map['results'];
       for (var note in notes) {
         noteInstances.add(HandynoteModel.fromJson(note));
@@ -23,10 +24,9 @@ class HandynoteApi {
 
   // Create(Post)
   static Future<http.Response> createMemo(
-      String title, user, category, content) async {
+      String title, category, content) async {
     final response = await http.post(Uri.parse(baseUrl), body: {
       'title': title,
-      'user': user,
       'category': category,
       'content': content,
     });
