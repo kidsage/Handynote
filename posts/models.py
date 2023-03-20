@@ -1,5 +1,4 @@
 from django.db import models
-from users.models import User
 from markdownx.models import MarkdownxField
 
 # Create your models here.

@@ -31,8 +31,8 @@ INSTALLED_APPS = [
 
     # Custom
     'rest_framework',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
+    # 'rest_framework_simplejwt',
+    # 'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
     'corsheaders',
     'markdownx',
@@ -141,8 +141,6 @@ MESSAGE_TAGS = {
 }
 
 # DRF
-
-AUTH_USER_MODEL = 'users.User' # 기본 유저 모델 설정
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

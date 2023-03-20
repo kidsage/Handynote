@@ -5,19 +5,4 @@ from rest_framework import serializers
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['user', 'nickname', 'image', 'phonenumber', 'introduce']
-
-
-class UserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(read_only=True)
-
-    class Meta:
-        model = User
-        fields = ['id', 'email', 'password', 'profile']
-        extra_kwargs = {
-            'password': {'write_only': True},
-        }
-
-
-class LogoutSerializer(serializers.Serializer):
-    refresh = serializers.CharField(max_length=255)
+        fields = ['nickname', 'image', 'phonenumber', 'introduce']
