@@ -13,9 +13,5 @@ router.register(r'category', CategoryViewSet)
 
 #
 urlpatterns = [
-    path('', include(router.urls)),
-    # path('login/', UserViewSet.as_view({'post': 'login'}), name='auth_login'),
-    # path('logout/', UserViewSet.as_view({'post': 'logout'}), name='auth_logout'),
-    # path('refresh-token/', TokenRefreshView.as_view(), name='auth_refresh_token'),
-    # path('verify-token/', TokenVerifyView.as_view(), name='auth_verify_token'),   
+    path('', include(router.urls)),  
 ]
