@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     # 'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
     'corsheaders',
-    'markdownx',
+    # 'markdownx',
 
     'posts',
     'users',

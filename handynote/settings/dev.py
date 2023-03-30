@@ -47,19 +47,19 @@ SWAGGER_SETTINGS = {
 }
 
 # MARKDOWN SETTINGS
-MARKDOWNX_MARKDOWN_EXTENSIONS = [
-    'markdown.extensions.extra',
-    'markdown.extensions.codehilite',
-    'markdown.extensions.toc',
-]
+# MARKDOWNX_MARKDOWN_EXTENSIONS = [
+#     'markdown.extensions.extra',
+#     'markdown.extensions.codehilite',
+#     'markdown.extensions.toc',
+# ]
 
-MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
-    'markdown.extensions.codehilite': {
-        'use_pygments': True,
-        'noclasses': True
-    }
-}
+# MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
+#     'markdown.extensions.codehilite': {
+#         'use_pygments': True,
+#         'noclasses': True
+#     }
+# }
 
-MARKDOWNX_UPLOAD_URLS_PATH = '/markdownx/upload/'
-MARKDOWNX_MEDIA_PATH = datetime.now().strftime('markdownx/%Y/%m/%d')
-MARKDOWNX_UPLOAD_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/svg+xml']
+# MARKDOWNX_UPLOAD_URLS_PATH = '/markdownx/upload/'
+# MARKDOWNX_MEDIA_PATH = datetime.now().strftime('markdownx/%Y/%m/%d')
+# MARKDOWNX_UPLOAD_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/svg+xml']

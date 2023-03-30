@@ -22,29 +22,29 @@ class PostViewSet(ModelViewSet):
         
         return super().get_serializer_class()
     
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
 
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            for item in serializer.data:
-                item['content'] = markdownify(item['content'])
+    #     page = self.paginate_queryset(queryset)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many=True)
+    #         for item in serializer.data:
+    #             item['content'] = markdownify(item['content'])
 
-            return self.get_paginated_response(serializer.data)
+    #         return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(queryset, many=True)
-        for item in serializer.data:
-            item['content'] = markdownify(item['content'])
+    #     serializer = self.get_serializer(queryset, many=True)
+    #     for item in serializer.data:
+    #         item['content'] = markdownify(item['content'])
             
-        return Response(serializer.data)
+    #     return Response(serializer.data)
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        content = markdownify(instance.content)
+    # def retrieve(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance)
+    #     content = markdownify(instance.content)
 
-        return Response({**serializer.data, 'content': content})
+    #     return Response({**serializer.data, 'content': content})
 
 
 class CategoryViewSet(ModelViewSet):
