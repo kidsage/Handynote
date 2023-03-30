@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:front/models/handynote_model.dart';
 import 'package:http/http.dart' as http;
 import '../services/api_service.dart';
@@ -17,17 +18,26 @@ class DetailScreen extends StatefulWidget {
   State<DetailScreen> createState() => _DetailScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen> {
+class _DetailScreenState extends State<DetailScreen>
+    with TickerProviderStateMixin {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
+
+  late TabController _tabController;
+
+  late String title;
+  late String text;
 
   @override
   void initState() {
     super.initState();
     if (widget.id != null) {
       loadMemo(widget.id!);
+      title = _titleController.text;
+      text = _contentController.text;
     }
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   Future<void> loadMemo(int id) async {
@@ -64,41 +74,97 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.id == null ? 'Create Memo' : 'Edit Memo'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                hintText: 'Title',
-              ),
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            onPressed: deleteMemo,
+            icon: const Icon(Icons.delete),
+          ),
+          IconButton(
+            onPressed: saveMemo,
+            icon: const Icon(Icons.save),
+          ),
+        ],
+        bottom: TabBar(
+          labelColor: Colors.black,
+          controller: _tabController,
+          tabs: const [
+            Tab(
+              child: Text("Edit"),
             ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: _contentController,
-              decoration: const InputDecoration(
-                hintText: 'Content',
-              ),
-              maxLines: null,
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: saveMemo,
-              child: Text(widget.id == null ? 'Create' : 'Save'),
-            ),
-            if (widget.id != null) const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: deleteMemo,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
-              child: const Text('Delete'),
+            Tab(
+              child: Text("Preview"),
             ),
           ],
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      hintText: '제목을 입력해주세요.',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (String title) {
+                      setState(() {
+                        this.title = title;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _contentController,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    decoration: const InputDecoration(
+                      hintText: '내용을 입력해주세요.',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (String text) {
+                      setState(() {
+                        this.text = text;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  MarkdownBody(data: text),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

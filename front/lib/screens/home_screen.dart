@@ -51,8 +51,42 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
         itemBuilder: (BuildContext context, int index) {
           var memo = _memoList[index];
           return ListTile(
-            title: Text(memo.title),
-            subtitle: Text(memo.content),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  memo.title,
+                  style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.visible,
+                ),
+              ],
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'updated: ${memo.update.substring(2, 10)}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    memo.content,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.visible,
+                  ),
+                ],
+              ),
+            ),
             onTap: () {
               _showMemoDetail(memo.id);
             },

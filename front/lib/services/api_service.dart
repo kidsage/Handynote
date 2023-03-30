@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:front/models/handynote_model.dart';
 
@@ -25,22 +26,30 @@ class HandynoteApi {
   // Create(Post)
   static Future<http.Response> createMemo(
       String title, category, content) async {
-    final response = await http.post(Uri.parse(baseUrl), body: {
-      'title': title,
-      'category': category,
-      'content': content,
-    });
+    final response = await http.post(
+      Uri.parse('$baseUrl/'),
+      body: {
+        'title': title,
+        'category': category,
+        'content': content,
+      },
+    );
     return response;
   }
 
   // Update(Patch)
   static Future<http.Response> updateMemo(
       int id, String title, category, content) async {
-    final response = await http.patch(Uri.parse('$baseUrl/$id/'), body: {
-      'title': title,
-      'category': category,
-      'content': content,
-    });
+    final response = await http.patch(
+      Uri.parse('$baseUrl/$id/'),
+      headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+      body: jsonEncode({
+        'title': title,
+        // 'category': category,
+        'content': content,
+      }),
+    );
+    // return response;
     return response;
   }
 
