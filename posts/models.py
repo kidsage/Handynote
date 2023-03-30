@@ -12,7 +12,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField('UPDATED AT', auto_now=True)
 
     class Meta:
-        ordering = ('updated_at', )
+        ordering = ('-updated_at', )
 
     def __str__(self):
         return self.title
