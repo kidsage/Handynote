@@ -1,69 +1,134 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
-// import '../screens/detail_screen.dart';
+List<Color> colors = [
+  const Color(0xFFFFFFFF),
+  const Color(0xffF28B83),
+  const Color(0xFFFCBC05),
+  const Color(0xFFFFF476),
+  const Color(0xFFCBFF90),
+  const Color(0xFFA7FEEA),
+  const Color(0xFFE6C9A9),
+  const Color(0xFFE8EAEE),
+  const Color(0xFFA7FEEA),
+  const Color(0xFFCAF0F8)
+];
 
-// class Memo extends StatelessWidget {
-//   final String id, title, user, category, content;
+class PriorityPicker extends StatefulWidget {
+  final Function(int) onTap;
+  final int selectedIndex;
+  const PriorityPicker({
+    required Key key,
+    required this.onTap,
+    required this.selectedIndex,
+  }) : super(key: key);
+  @override
+  _PriorityPickerState createState() => _PriorityPickerState();
+}
 
-//   const Memo({
-//     super.key,
-//     required this.id,
-//     required this.title,
-//     required this.user,
-//     required this.category,
-//     required this.content,
-//   });
+class _PriorityPickerState extends State<PriorityPicker> {
+  int? selectedIndex; // 하위 ??= 에러 방지
+  List<String> priorityText = ['Low', 'High', 'Very High'];
+  List<Color> priorityColor = [Colors.green, Colors.lightGreen, Colors.red];
 
-//   @override
-//   Widget build(BuildContext context) {
-//     // 유저 반응에 따라 작동 (탭, 드래그, 무브, 줌 등 모두 감지 가능)
-//     return GestureDetector(
-//       onTap: () {
-//         // Push는 statelesswidget을 원하지 않음
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//             // 사실 새로운 widget을 띄우고 있는 형태이다
-//             builder: (context) => DetailScreen(
-//               id: id,
-//             ),
-//             // 아래에서 카드가 나오게 되는 것 처럼 만들어 주는 옵션
-//             fullscreenDialog: true,
-//           ),
-//         );
-//       },
-//       child: Column(
-//         children: [
-//           Hero(
-//             tag: id,
-//             child: Container(
-//               width: 200,
-//               // 아래 borderradius가 적용이 안되는 것을 적용시켜주는 코드
-//               clipBehavior: Clip.hardEdge,
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(15),
-//                 boxShadow: [
-//                   BoxShadow(
-//                       blurRadius: 15,
-//                       offset: const Offset(10, 10),
-//                       color: Colors.black.withOpacity(0.5))
-//                 ],
-//               ),
-//               // child: Image.network(thumb),
-//             ),
-//           ),
-//           const SizedBox(
-//             height: 10,
-//           ),
-//           Text(
-//             title,
-//             style: const TextStyle(
-//               fontSize: 22,
-//               fontWeight: FontWeight.w600,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    selectedIndex ??= widget.selectedIndex;
+    double width = MediaQuery.of(context).size.width;
+    return SizedBox(
+      width: width,
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 3,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+              widget.onTap(index);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              width: width / 3,
+              height: 70,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: selectedIndex == index
+                        ? priorityColor[index]
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: selectedIndex == index
+                        ? Border.all(width: 2, color: Colors.black)
+                        : Border.all(width: 0, color: Colors.transparent)),
+                child: Center(
+                  child: Text(priorityText[index],
+                      style: TextStyle(
+                          color: selectedIndex == index
+                              ? Colors.white
+                              : Colors.black,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class ColorPicker extends StatefulWidget {
+  final Function(int) onTap;
+  final int selectedIndex;
+  const ColorPicker({
+    required Key key,
+    required this.onTap,
+    required this.selectedIndex,
+  }) : super(key: key);
+  @override
+  _ColorPickerState createState() => _ColorPickerState();
+}
+
+class _ColorPickerState extends State<ColorPicker> {
+  int? selectedIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    selectedIndex ??= widget.selectedIndex;
+    double width = MediaQuery.of(context).size.width;
+    return SizedBox(
+      width: width,
+      height: 50,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: colors.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+              widget.onTap(index);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              width: 50,
+              height: 50,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: colors[index],
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 2, color: Colors.black)),
+                child: Center(
+                    child: selectedIndex == index
+                        ? const Icon(Icons.done)
+                        : Container()),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
