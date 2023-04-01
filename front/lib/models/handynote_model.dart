@@ -1,8 +1,14 @@
-class HandynoteModel {
+class Note {
   final int id;
   final String title, category, content, update;
 
-  HandynoteModel.fromJson(Map<String, dynamic> json)
+  set title(String newTitle) {
+    if (newTitle.length <= 255) {
+      title = newTitle;
+    }
+  }
+
+  Note.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         title = json['title'],
         category = json['category'].toString(),
