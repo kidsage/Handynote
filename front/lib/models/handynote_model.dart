@@ -1,17 +1,24 @@
 class Note {
   final int id;
   final String title, category, content, update;
+  int priority, color;
 
-  set title(String newTitle) {
-    if (newTitle.length <= 255) {
-      title = newTitle;
-    }
-  }
+  Note({
+    required this.id,
+    required this.title,
+    required this.category,
+    required this.content,
+    required this.priority,
+    required this.color,
+    required this.update,
+  });
 
   Note.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         title = json['title'],
         category = json['category'].toString(),
         content = json['content'],
-        update = json['updated_at'];
+        update = json['updated_at'],
+        priority = json['priority'],
+        color = json['color'];
 }
