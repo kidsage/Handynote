@@ -13,16 +13,31 @@ List<Color> colors = [
   const Color(0xFFCAF0F8)
 ];
 
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
 class PriorityPicker extends StatefulWidget {
   final Function(int) onTap;
   final int selectedIndex;
   const PriorityPicker({
-    required Key key,
+    super.key,
     required this.onTap,
     required this.selectedIndex,
-  }) : super(key: key);
+  });
+
   @override
-  _PriorityPickerState createState() => _PriorityPickerState();
+  State<PriorityPicker> createState() => _PriorityPickerState();
 }
 
 class _PriorityPickerState extends State<PriorityPicker> {
@@ -82,12 +97,12 @@ class ColorPicker extends StatefulWidget {
   final Function(int) onTap;
   final int selectedIndex;
   const ColorPicker({
-    required Key key,
+    super.key,
     required this.onTap,
     required this.selectedIndex,
-  }) : super(key: key);
+  });
   @override
-  _ColorPickerState createState() => _ColorPickerState();
+  State<ColorPicker> createState() => _ColorPickerState();
 }
 
 class _ColorPickerState extends State<ColorPicker> {
