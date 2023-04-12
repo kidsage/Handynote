@@ -4,7 +4,9 @@ import 'package:front/models/handynote_model.dart';
 class NotesSearch extends SearchDelegate<Note> {
   final List<Note> notes;
   List<Note> filteredNotes = [];
-  NotesSearch({required this.notes});
+  NotesSearch({
+    required this.notes,
+  });
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -43,7 +45,7 @@ class NotesSearch extends SearchDelegate<Note> {
         color: Colors.black,
       ),
       onPressed: () {
-        close(context, null);
+        // close(context, null);
       },
     );
   }
@@ -105,7 +107,7 @@ class NotesSearch extends SearchDelegate<Note> {
         return Container(
           color: Colors.white,
           child: ListView.builder(
-            itemCount: filteredNotes.length ?? 0,
+            itemCount: filteredNotes.length,
             itemBuilder: (context, index) {
               return ListTile(
                 leading: const Icon(
@@ -201,7 +203,7 @@ class NotesSearch extends SearchDelegate<Note> {
         return Container(
           color: Colors.white,
           child: ListView.builder(
-            itemCount: filteredNotes.length ?? 0,
+            itemCount: filteredNotes.length,
             itemBuilder: (context, index) {
               return ListTile(
                 leading: const Icon(
