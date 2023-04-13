@@ -1,170 +1,109 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:front/models/handynote_model.dart';
-import 'package:http/http.dart' as http;
-import '../services/api_service.dart';
+import 'package:front/widgets/handynote_widget.dart';
 
-class DetailScreen extends StatefulWidget {
-  final int? id;
+class NoteDetail extends StatefulWidget {
+  final String appBarTitle;
+  final Note note;
 
-  const DetailScreen({
+  const NoteDetail({
     super.key,
-    required this.id,
+    required this.appBarTitle,
+    required this.note,
   });
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState();
+  State<NoteDetail> createState() => _NoteDetailState();
 }
 
-class _DetailScreenState extends State<DetailScreen>
-    with TickerProviderStateMixin {
+class _NoteDetailState extends State<NoteDetail> {
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
+  final TextEditingController _contentontroller = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
-  late TabController _tabController;
-
-  late String title;
-  late String text;
+  late int _color;
+  bool isEdited = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.id != null) {
-      loadMemo(widget.id!);
-      title = _titleController.text;
-      text = _contentController.text;
-    }
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  Future<void> loadMemo(int id) async {
-    final response = await http.get(Uri.parse('${HandynoteApi.baseUrl}/$id'));
-    final HandynoteModel memo =
-        HandynoteModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-    _titleController.text = memo.title;
-    _contentController.text = memo.content;
-    _categoryController.text = memo.category;
-  }
-
-  Future<void> saveMemo() async {
-    final title = _titleController.text;
-    final content = _contentController.text;
-    final category = _categoryController.text;
-
-    if (widget.id != null) {
-      await HandynoteApi.updateMemo(widget.id!, title, category, content);
-    } else {
-      await HandynoteApi.createMemo(title, category, content);
-    }
-    if (!mounted) return;
-    Navigator.pop(context);
-  }
-
-  Future<void> deleteMemo() async {
-    await HandynoteApi.deleteMemo(widget.id!);
-    if (!mounted) return;
-    Navigator.pop(context);
+    _titleController.text = widget.note.title;
+    _contentontroller.text = widget.note.content;
+    _categoryController.text = widget.note.category;
+    _color = widget.note.color;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.id == null ? 'Create Memo' : 'Edit Memo'),
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-            onPressed: deleteMemo,
-            icon: const Icon(Icons.delete),
+    return WillPopScope(
+      onWillPop: () async {
+        isEdited ? showDiscardDialog(context) : moveToLastScreen();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(
+            widget.appBarTitle,
+            style: Theme.of(context).textTheme.headline5,
           ),
-          IconButton(
-            onPressed: saveMemo,
-            icon: const Icon(Icons.save),
-          ),
-        ],
-        bottom: TabBar(
-          labelColor: Colors.black,
-          controller: _tabController,
-          tabs: const [
-            Tab(
-              child: Text("Edit"),
+          backgroundColor: colors[_color],
+          leading: IconButton(
+              splashRadius: 22,
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+              onPressed: () {
+                isEdited ? showDiscardDialog(context) : moveToLastScreen();
+              }),
+          actions: [
+            IconButton(
+              splashRadius: 22,
+              icon: const Icon(
+                Icons.save,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                _titleController.text.isEmpty
+                    ? showEmptyTitleDialog(context)
+                    : _save();
+              },
             ),
-            Tab(
-              child: Text("Preview"),
-            ),
+            IconButton(
+              splashRadius: 22,
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                showDeleteDialog(context);
+              },
+            )
           ],
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TextField(
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    controller: _titleController,
-                    decoration: const InputDecoration(
-                      hintText: '제목을 입력해주세요.',
-                      border: InputBorder.none,
-                    ),
-                    onChanged: (String title) {
-                      setState(() {
-                        this.title = title;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _contentController,
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                      hintText: '내용을 입력해주세요.',
-                      border: InputBorder.none,
-                    ),
-                    onChanged: (String text) {
-                      setState(() {
-                        this.text = text;
-                      });
-                    },
-                  ),
-                ],
+        body: Container(
+          color: colors[_color],
+          child: Column(
+            children: [
+              PriorityPicker(
+                onTap: (index) {
+                  setState(() {
+                    _color = index;
+                  });
+                  isEdited = true;
+                  widget.note.color = index;
+                },
+                selectedIndex: 3 - widget.note.priority,
               ),
-            ),
+              ColorPicker(
+                onTap: (index) {
+                  setState(() {
+                    _color = index;
+                  });
+                },
+                selectedIndex: widget.note.color,
+              ),
+              const Padding(padding: EdgeInsets.all(16.0))
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  MarkdownBody(data: text),
-                ],
-              ),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
