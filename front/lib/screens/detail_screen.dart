@@ -18,7 +18,7 @@ class NoteDetail extends StatefulWidget {
 
 class _NoteDetailState extends State<NoteDetail> {
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentontroller = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
   late int _color;
@@ -28,7 +28,7 @@ class _NoteDetailState extends State<NoteDetail> {
   void initState() {
     super.initState();
     _titleController.text = widget.note.title;
-    _contentontroller.text = widget.note.content;
+    _contentController.text = widget.note.content;
     _categoryController.text = widget.note.category;
     _color = widget.note.color;
   }
@@ -100,7 +100,20 @@ class _NoteDetailState extends State<NoteDetail> {
                 },
                 selectedIndex: widget.note.color,
               ),
-              const Padding(padding: EdgeInsets.all(16.0))
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 10,
+                  maxLength: 255,
+                  controller: _contentController,
+                  style: Theme.of(context).textTheme.bodyText1,
+                  onChanged: (value) {
+                    update();
+                  },
+                  decoration: InputDecoration.collapsed(hintText: 'Content'),
+                ),
+              ),
             ],
           ),
         ),
