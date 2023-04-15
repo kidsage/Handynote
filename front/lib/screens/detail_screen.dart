@@ -100,18 +100,36 @@ class _NoteDetailState extends State<NoteDetail> {
                 },
                 selectedIndex: widget.note.color,
               ),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   keyboardType: TextInputType.multiline,
                   maxLines: 10,
                   maxLength: 255,
-                  controller: _contentController,
-                  style: Theme.of(context).textTheme.bodyText1,
+                  controller: _titleController,
+                  style: Theme.of(context).textTheme.bodyText2,
                   onChanged: (value) {
-                    update();
+                    updateTitle();
                   },
-                  decoration: InputDecoration.collapsed(hintText: 'Content'),
+                  decoration:
+                      const InputDecoration.collapsed(hintText: 'Title'),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 10,
+                    maxLength: 255,
+                    controller: _contentController,
+                    style: Theme.of(context).textTheme.bodyText1,
+                    onChanged: (value) {
+                      updateContent();
+                    },
+                    decoration:
+                        const InputDecoration.collapsed(hintText: 'Content'),
+                  ),
                 ),
               ),
             ],
@@ -120,4 +138,151 @@ class _NoteDetailState extends State<NoteDetail> {
       ),
     );
   }
+    void showDiscardDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius:  BorderRadius.all(Radius.circular(10.0))),
+          title: Text(
+            "Discard Changes?",
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          content: Text("Are you sure you want to discard changes?",
+              style: Theme.of(context).textTheme.bodyText1),
+          actions: <Widget>[
+            TextButton(
+              child: Text("No",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: Colors.purple)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Yes",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: Colors.purple)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                moveToLastScreen();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showEmptyTitleDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text(
+            "Title is empty!",
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          content: Text('The title of the note cannot be empty.',
+              style: Theme.of(context).textTheme.bodyText1),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Okay",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: Colors.purple)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all( Radius.circular(10.0))),
+          title: Text(
+            "Delete Note?",
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+          content: Text("Are you sure you want to delete this note?",
+              style: Theme.of(context).textTheme.bodyText1),
+          actions: <Widget>[
+            TextButton(
+              child: Text("No",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: Colors.purple)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Yes",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: Colors.purple)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _delete();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  // 수정이 필요한 부분들(0415)!
+  void moveToLastScreen() {
+    Navigator.pop(context, true);
+  }
+
+  void updateTitle() {
+    isEdited = true;
+    note.title = _titleController.text;
+  }
+
+  void updateDescription() {
+    isEdited = true;
+    note.description = _descriptionController.text;
+  }
+
+  // Save data to database
+  void _save() async {
+    moveToLastScreen();
+
+    note.date = DateFormat.yMMMd().format(DateTime.now());
+
+    if (note.id != null) {
+      await helper.updateNote(note);
+    } else {
+      await helper.insertNote(note);
+    }
+  }
+
+  void _delete() async {
+    await helper.deleteNote(note.id);
+    moveToLastScreen();
+  }
 }
+}
+
