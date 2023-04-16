@@ -1,6 +1,6 @@
 class Note {
   final int id;
-  final String title, category, content, update;
+  String title, category, content, update;
   int priority, color;
 
   Note({

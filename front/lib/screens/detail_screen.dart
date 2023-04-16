@@ -228,7 +228,7 @@ class _NoteDetailState extends State<NoteDetail> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
-                      .copyWith(color: Colors.purple)),
+                      ?.copyWith(color: Colors.purple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -238,7 +238,7 @@ class _NoteDetailState extends State<NoteDetail> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
-                      .copyWith(color: Colors.purple)),
+                      ?.copyWith(color: Colors.purple)),
               onPressed: () {
                 Navigator.of(context).pop();
                 _delete();
@@ -258,19 +258,19 @@ class _NoteDetailState extends State<NoteDetail> {
 
   void updateTitle() {
     isEdited = true;
-    note.title = _titleController.text;
+    widget.note.title = _titleController.text;
   }
 
   void updateDescription() {
     isEdited = true;
-    note.description = _descriptionController.text;
+    widget.note.content = _contentController.text;
   }
 
   // Save data to database
   void _save() async {
     moveToLastScreen();
 
-    note.date = DateFormat.yMMMd().format(DateTime.now());
+    widget.note.update = DateFormat.yMMMd().format(DateTime.now());
 
     if (note.id != null) {
       await helper.updateNote(note);
