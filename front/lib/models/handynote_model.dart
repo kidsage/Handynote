@@ -1,10 +1,9 @@
 class Note {
-  final int id;
+  int? id;
   String title, category, content, update;
   int priority, color;
 
   Note({
-    required this.id,
     required this.title,
     required this.category,
     required this.content,
