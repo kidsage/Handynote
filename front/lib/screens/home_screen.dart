@@ -118,11 +118,9 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
           navigateToDetail(
             'Add Note',
             Note(
-              id: 1000,
               title: '',
               content: '',
               category: '',
-              update: '',
               priority: 3,
               color: 0,
             ),
@@ -197,7 +195,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        _noteList[index].update,
+                        _noteList[index].update!,
                         style: Theme.of(context).textTheme.subtitle2,
                       )
                     ],
