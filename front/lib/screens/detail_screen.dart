@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:front/models/handynote_model.dart';
 import 'package:front/widgets/handynote_widget.dart';
 
+import '../services/api_service.dart';
+
 class NoteDetail extends StatefulWidget {
   final String appBarTitle;
   final Note note;
@@ -22,6 +24,7 @@ class _NoteDetailState extends State<NoteDetail> {
   final TextEditingController _categoryController = TextEditingController();
 
   late int _color;
+  late int _priority;
   bool isEdited = false;
 
   @override
@@ -31,6 +34,7 @@ class _NoteDetailState extends State<NoteDetail> {
     _contentController.text = widget.note.content;
     _categoryController.text = widget.note.category;
     _color = widget.note.color;
+    _priority = widget.note.priority;
   }
 
   @override
@@ -38,6 +42,7 @@ class _NoteDetailState extends State<NoteDetail> {
     return WillPopScope(
       onWillPop: () async {
         isEdited ? showDiscardDialog(context) : moveToLastScreen();
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -63,7 +68,7 @@ class _NoteDetailState extends State<NoteDetail> {
               onPressed: () {
                 _titleController.text.isEmpty
                     ? showEmptyTitleDialog(context)
-                    : _save();
+                    : saveNote();
               },
             ),
             IconButton(
@@ -138,13 +143,14 @@ class _NoteDetailState extends State<NoteDetail> {
       ),
     );
   }
-    void showDiscardDialog(BuildContext context) {
+
+  void showDiscardDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           shape: const RoundedRectangleBorder(
-              borderRadius:  BorderRadius.all(Radius.circular(10.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
             "Discard Changes?",
             style: Theme.of(context).textTheme.bodyText2,
@@ -157,7 +163,7 @@ class _NoteDetailState extends State<NoteDetail> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
-                      .copyWith(color: Colors.purple)),
+                      ?.copyWith(color: Colors.purple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -167,7 +173,7 @@ class _NoteDetailState extends State<NoteDetail> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
-                      .copyWith(color: Colors.purple)),
+                      ?.copyWith(color: Colors.purple)),
               onPressed: () {
                 Navigator.of(context).pop();
                 moveToLastScreen();
@@ -198,7 +204,7 @@ class _NoteDetailState extends State<NoteDetail> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
-                      .copyWith(color: Colors.purple)),
+                      ?.copyWith(color: Colors.purple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -215,7 +221,7 @@ class _NoteDetailState extends State<NoteDetail> {
       builder: (BuildContext context) {
         return AlertDialog(
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all( Radius.circular(10.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
             "Delete Note?",
             style: Theme.of(context).textTheme.bodyText2,
@@ -241,7 +247,7 @@ class _NoteDetailState extends State<NoteDetail> {
                       ?.copyWith(color: Colors.purple)),
               onPressed: () {
                 Navigator.of(context).pop();
-                _delete();
+                deleteNote();
               },
             ),
           ],
@@ -250,8 +256,37 @@ class _NoteDetailState extends State<NoteDetail> {
     );
   }
 
+  Future<void> saveNote() async {
+    final title = _titleController.text;
+    final content = _contentController.text;
+    final category = _categoryController.text;
 
-  // 수정이 필요한 부분들(0415)!
+    if (widget.note.id != null) {
+      await HandynoteApi.updateNote(
+        widget.note.id!,
+        title,
+        category,
+        content,
+        _priority,
+        _color,
+      );
+    } else {
+      await HandynoteApi.createNote(
+          title, category, content, _priority, _color);
+    }
+    if (!mounted) return;
+    Navigator.pop(context);
+  }
+
+  Future<void> deleteNote() async {
+    moveToLastScreen();
+
+    await HandynoteApi.deleteNote(widget.note.id!);
+    if (!mounted) return;
+    Navigator.pop(context);
+    moveToLastScreen();
+  }
+
   void moveToLastScreen() {
     Navigator.pop(context, true);
   }
@@ -261,28 +296,8 @@ class _NoteDetailState extends State<NoteDetail> {
     widget.note.title = _titleController.text;
   }
 
-  void updateDescription() {
+  void updateContent() {
     isEdited = true;
     widget.note.content = _contentController.text;
   }
-
-  // Save data to database
-  void _save() async {
-    moveToLastScreen();
-
-    widget.note.update = DateFormat.yMMMd().format(DateTime.now());
-
-    if (note.id != null) {
-      await helper.updateNote(note);
-    } else {
-      await helper.insertNote(note);
-    }
-  }
-
-  void _delete() async {
-    await helper.deleteNote(note.id);
-    moveToLastScreen();
-  }
 }
-}
-
