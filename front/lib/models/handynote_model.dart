@@ -1,15 +1,17 @@
 class Note {
   int? id;
-  String title, category, content, update;
+  String? update;
+  String title, category, content;
   int priority, color;
 
   Note({
+    this.id,
+    this.update,
     required this.title,
     required this.category,
     required this.content,
     required this.priority,
     required this.color,
-    required this.update,
   });
 
   Note.fromJson(Map<String, dynamic> json)
