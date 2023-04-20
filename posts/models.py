@@ -8,8 +8,8 @@ class Post(models.Model):
     title = models.CharField('TITLE', max_length=50)
     # image = models.ImageField('IMAGE', upload_to='post/%Y/%m/', blank=True, null=True)
     content = MarkdownxField()
-    priority = models.IntegerField('PRIORITY', default=1)
-    color = models.IntegerField('COLOR', default=1)
+    priority = models.SmallIntegerField('PRIORITY', default=1)
+    color = models.SmallIntegerField('COLOR', default=1)
     created_at = models.DateTimeField('CREATED AT', auto_now_add=True)
     updated_at = models.DateTimeField('UPDATED AT', auto_now=True)
 
