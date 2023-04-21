@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:front/models/handynote_model.dart';
 import 'package:front/widgets/handynote_widget.dart';
 
@@ -15,26 +16,26 @@ class NoteDetail extends StatefulWidget {
   });
 
   @override
-  State<NoteDetail> createState() => _NoteDetailState();
+  State<NoteDetail> createState() => NoteDetailState();
 }
 
-class _NoteDetailState extends State<NoteDetail> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
+class NoteDetailState extends State<NoteDetail> {
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController contentController = TextEditingController();
+  final TextEditingController categoryController = TextEditingController();
 
-  late int _color;
-  late int _priority;
+  late int color;
+  late int priority;
   bool isEdited = false;
 
   @override
   void initState() {
     super.initState();
-    _titleController.text = widget.note.title;
-    _contentController.text = widget.note.content;
-    _categoryController.text = widget.note.category;
-    _color = widget.note.color;
-    _priority = widget.note.priority;
+    titleController.text = widget.note.title;
+    contentController.text = widget.note.content;
+    categoryController.text = widget.note.category;
+    color = widget.note.color;
+    priority = widget.note.priority;
   }
 
   @override
@@ -51,7 +52,7 @@ class _NoteDetailState extends State<NoteDetail> {
             widget.appBarTitle,
             style: Theme.of(context).textTheme.headline5,
           ),
-          backgroundColor: colors[_color],
+          backgroundColor: colors[color],
           leading: IconButton(
               splashRadius: 22,
               icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
@@ -66,7 +67,7 @@ class _NoteDetailState extends State<NoteDetail> {
                 color: Colors.black,
               ),
               onPressed: () {
-                _titleController.text.isEmpty
+                titleController.text.isEmpty
                     ? showEmptyTitleDialog(context)
                     : saveNote();
               },
@@ -84,13 +85,13 @@ class _NoteDetailState extends State<NoteDetail> {
           ],
         ),
         body: Container(
-          color: colors[_color],
+          color: colors[color],
           child: Column(
             children: [
               PriorityPicker(
                 onTap: (index) {
                   setState(() {
-                    _color = index;
+                    color = index;
                   });
                   isEdited = true;
                   widget.note.color = index;
@@ -100,7 +101,7 @@ class _NoteDetailState extends State<NoteDetail> {
               ColorPicker(
                 onTap: (index) {
                   setState(() {
-                    _color = index;
+                    color = index;
                   });
                 },
                 selectedIndex: widget.note.color,
@@ -110,14 +111,20 @@ class _NoteDetailState extends State<NoteDetail> {
                 child: TextField(
                   keyboardType: TextInputType.multiline,
                   maxLines: 10,
-                  maxLength: 255,
-                  controller: _titleController,
+                  maxLength: 100,
+                  controller: titleController,
                   style: Theme.of(context).textTheme.bodyText2,
                   onChanged: (value) {
                     updateTitle();
                   },
                   decoration:
                       const InputDecoration.collapsed(hintText: 'Title'),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: TextField(
+                  keyboardType: TextInputType.multiline,
                 ),
               ),
               Expanded(
@@ -127,7 +134,7 @@ class _NoteDetailState extends State<NoteDetail> {
                     keyboardType: TextInputType.multiline,
                     maxLines: 10,
                     maxLength: 255,
-                    controller: _contentController,
+                    controller: contentController,
                     style: Theme.of(context).textTheme.bodyText1,
                     onChanged: (value) {
                       updateContent();
@@ -257,9 +264,9 @@ class _NoteDetailState extends State<NoteDetail> {
   }
 
   Future<void> saveNote() async {
-    final title = _titleController.text;
-    final content = _contentController.text;
-    final category = _categoryController.text;
+    final title = titleController.text;
+    final content = contentController.text;
+    final category = categoryController.text;
 
     if (widget.note.id != null) {
       await HandynoteApi.updateNote(
@@ -267,23 +274,18 @@ class _NoteDetailState extends State<NoteDetail> {
         title,
         category,
         content,
-        _priority,
-        _color,
+        priority,
+        color,
       );
     } else {
-      await HandynoteApi.createNote(
-          title, category, content, _priority, _color);
+      await HandynoteApi.createNote(title, category, content, priority, color);
     }
     if (!mounted) return;
     Navigator.pop(context);
   }
 
   Future<void> deleteNote() async {
-    moveToLastScreen();
-
     await HandynoteApi.deleteNote(widget.note.id!);
-    if (!mounted) return;
-    Navigator.pop(context);
     moveToLastScreen();
   }
 
@@ -293,11 +295,11 @@ class _NoteDetailState extends State<NoteDetail> {
 
   void updateTitle() {
     isEdited = true;
-    widget.note.title = _titleController.text;
+    widget.note.title = titleController.text;
   }
 
   void updateContent() {
     isEdited = true;
-    widget.note.content = _contentController.text;
+    widget.note.content = contentController.text;
   }
 }
