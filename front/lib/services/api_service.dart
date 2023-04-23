@@ -28,26 +28,43 @@ class HandynoteApi {
       String title, category, content, int priority, color) async {
     final response = await http.post(
       Uri.parse('$baseUrl/'),
-      body: {
+      headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+      body: jsonEncode({
         'title': title,
         'category': category,
         'content': content,
         'priority': priority,
         'color': color
-      },
+      }),
     );
     return response;
   }
 
   // Update(Patch)
+  // static Future<http.Response> updateNote(
+  //     int id, priority, color, String title, category, content) async {
+  //   final response = await http.patch(
+  //     Uri.parse('$baseUrl/$id/'),
+  //     headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+  //     body: jsonEncode({
+  //       'title': title,
+  //       'category': category,
+  //       'content': content,
+  //       'priority': priority,
+  //       'color': color
+  //     }),
+  //   );
+  //   return response;
+  // }
+
+  // No category patch code.
   static Future<http.Response> updateNote(
-      int id, priority, color, String title, category, content) async {
+      int id, String title, content, int priority, color) async {
     final response = await http.patch(
       Uri.parse('$baseUrl/$id/'),
       headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       body: jsonEncode({
         'title': title,
-        'category': category,
         'content': content,
         'priority': priority,
         'color': color
