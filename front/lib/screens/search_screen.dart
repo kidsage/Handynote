@@ -45,7 +45,8 @@ class NotesSearch extends SearchDelegate<Note> {
         color: Colors.black,
       ),
       onPressed: () {
-        // close(context, null);
+        Navigator.pop(
+            context); // close에서 수정 > result값을 null로 주는 방식이 안먹히는듯..? 역시 템플릿 ㅡㅡ
       },
     );
   }
