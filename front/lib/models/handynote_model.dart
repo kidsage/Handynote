@@ -1,7 +1,7 @@
 class Note {
   int? id;
   String? update;
-  String? category;
+  Category? category;
   String title, content;
   int priority, color;
 
@@ -15,12 +15,41 @@ class Note {
     required this.color,
   });
 
-  Note.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        title = json['title'],
-        category = json['category'].toString(),
-        content = json['content'],
-        update = json['updated_at'],
-        priority = json['priority'],
-        color = json['color'];
+  factory Note.fromJson(Map<String, dynamic> json) {
+    return Note(
+      id: json['id'],
+      title: json['title'],
+      category: Category.fromJson(json['category']),
+      content: json['content'],
+      update: json['updated_at'],
+      priority: json['priority'],
+      color: json['color'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'category': {'name': category},
+        'content': content,
+        'priority': priority,
+        'color': color
+      };
+}
+
+class Category {
+  String? name;
+
+  Category({
+    this.name,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      return Category(name: '');
+    }
+    return Category(
+      // ignore: unnecessary_null_in_if_null_operators
+      name: json['name'] ?? '',
+    );
+  }
 }
