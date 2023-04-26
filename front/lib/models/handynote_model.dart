@@ -48,7 +48,6 @@ class Category {
       return Category(name: '');
     }
     return Category(
-      // ignore: unnecessary_null_in_if_null_operators
       name: json['name'] ?? '',
     );
   }
