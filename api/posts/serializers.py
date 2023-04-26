@@ -6,6 +6,11 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name']
+        # 고유성 검사 제거
+        # https://github.com/encode/django-rest-framework/issues/1682
+        extra_kwargs = {
+            'name': {'validators': []},
+        }
 
     def __str__(self) -> str:
         return self.name
@@ -30,11 +35,13 @@ class PostSerializer(serializers.ModelSerializer):
         return post
     
     def update(self, instance, validated_data):
-        instance.title = validated_data.get('title', instance.title)
         category_data = validated_data.pop('category')
-        instance.category, _ = Category.objects.get_or_create(**category_data)
-        instance.content = validated_data.get('content', instance.content)
-        instance.priority = validated_data.get('priority', instance.priority)
-        instance.color = validated_data.get('color', instance.color)
-        instance.save()
-        return instance
+        if category_data:
+            category_instance = Category.objects.get(name=category_data['name'])
+            if category_instance:
+                instance.category = category_instance
+            else:
+                category = Category.objects.create(**category_data)
+                instance.category = category
+
+        return super().update(instance, validated_data)
