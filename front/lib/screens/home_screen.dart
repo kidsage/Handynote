@@ -37,10 +37,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     bool result = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => NoteDetail(
-                  appBarTitle: title,
-                  note: note,
-                )));
+            builder: (context) => NoteDetail(appBarTitle: title, note: note)));
 
     if (result == true) {
       updateListView();
@@ -73,7 +70,11 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                     context: context,
                     delegate: NotesSearch(notes: _noteList),
                   );
-                  navigateToDetail("Edit Note", result!);
+                  if (result != null) {
+                    navigateToDetail("Edit Note", result);
+                  } else {
+                    const MyHomeScreen();
+                  }
                 },
                 icon: const Icon(
                   Icons.search,
@@ -84,6 +85,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
           _noteList.isEmpty
               ? Container()
               : IconButton(
+                  splashRadius: 22,
                   onPressed: () {
                     setState(() {
                       axisCount = axisCount == 2 ? 4 : 2;
@@ -120,7 +122,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
             Note(
               title: '',
               content: '',
-              category: '',
+              category: Category(name: ''),
               priority: 3,
               color: 0,
             ),
@@ -237,66 +239,3 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     }
   }
 }
-
-// API test code.
-// @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     appBar: AppBar(
-//       title: const Text('Note List'),
-//     ),
-//     body: ListView.builder(
-//       itemCount: _noteList.length,
-//       itemBuilder: (BuildContext context, int index) {
-//         var Note = _noteList[index];
-//         return ListTile(
-//           title: Column(
-//             crossAxisAlignment: CrossAxisAlignment.stretch,
-//             children: [
-//               Text(
-//                 Note.title,
-//                 style: const TextStyle(
-//                   fontSize: 25,
-//                   fontWeight: FontWeight.w500,
-//                 ),
-//                 overflow: TextOverflow.visible,
-//               ),
-//             ],
-//           ),
-//           subtitle: Padding(
-//             padding: const EdgeInsets.symmetric(vertical: 15),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.stretch,
-//               children: [
-//                 Text(
-//                   'updated: ${Note.update.substring(2, 10)}',
-//                   style: const TextStyle(
-//                     fontSize: 13,
-//                     fontWeight: FontWeight.w400,
-//                   ),
-//                 ),
-//                 Text(
-//                   Note.content,
-//                   style: const TextStyle(
-//                     fontSize: 20,
-//                     fontWeight: FontWeight.w500,
-//                   ),
-//                   overflow: TextOverflow.visible,
-//                 ),
-//               ],
-//             ),
-//           ),
-//           onTap: () {
-//             _showNoteDetail(Note.id);
-//           },
-//         );
-//       },
-//     ),
-//     floatingActionButton: FloatingActionButton(
-//       onPressed: () {
-//         _showNoteDetail(null);
-//       },
-//       child: const Icon(Icons.add),
-//     ),
-//   );
-// }
