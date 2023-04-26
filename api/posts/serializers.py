@@ -37,7 +37,7 @@ class PostSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         category_data = validated_data.pop('category')
         if category_data:
-            category_instance = Category.objects.get(name=category_data['name'])
+            category_instance = Category.objects.filter(name=category_data['name'])
             if category_instance:
                 instance.category = category_instance
             else:
