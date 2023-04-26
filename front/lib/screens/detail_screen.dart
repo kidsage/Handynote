@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:front/models/handynote_model.dart';
 import 'package:front/widgets/handynote_widget.dart';
 
@@ -33,7 +32,7 @@ class NoteDetailState extends State<NoteDetail> {
     super.initState();
     titleController.text = widget.note.title;
     contentController.text = widget.note.content;
-    categoryController.text = widget.note.category;
+    categoryController.text = widget.note.category!.name!;
     color = widget.note.color;
     priority = widget.note.priority;
   }
@@ -110,7 +109,7 @@ class NoteDetailState extends State<NoteDetail> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   keyboardType: TextInputType.multiline,
-                  maxLines: 10,
+                  maxLines: 5,
                   maxLength: 100,
                   controller: titleController,
                   style: Theme.of(context).textTheme.bodyText2,
@@ -121,10 +120,15 @@ class NoteDetailState extends State<NoteDetail> {
                       const InputDecoration.collapsed(hintText: 'Title'),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   keyboardType: TextInputType.multiline,
+                  maxLines: 1,
+                  maxLength: 10,
+                  controller: categoryController,
+                  style: Theme.of(context).textTheme.bodyText2,
+                  onChanged: (value) {},
                 ),
               ),
               Expanded(
@@ -301,5 +305,10 @@ class NoteDetailState extends State<NoteDetail> {
   void updateContent() {
     isEdited = true;
     widget.note.content = contentController.text;
+  }
+
+  void updateCategory() {
+    isEdited = true;
+    widget.note.category = categoryController.text as Category?;
   }
 }
