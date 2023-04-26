@@ -31,7 +31,7 @@ class HandynoteApi {
       headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       body: jsonEncode({
         'title': title,
-        'category': category,
+        'category': {'name': category},
         'content': content,
         'priority': priority,
         'color': color
@@ -59,12 +59,13 @@ class HandynoteApi {
 
   // No category patch code.
   static Future<http.Response> updateNote(
-      int id, String title, content, int priority, color) async {
+      int id, String title, category, content, int priority, color) async {
     final response = await http.patch(
       Uri.parse('$baseUrl/$id/'),
       headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       body: jsonEncode({
         'title': title,
+        'category': {'name': category},
         'content': content,
         'priority': priority,
         'color': color
