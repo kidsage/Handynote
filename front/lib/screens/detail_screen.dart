@@ -284,8 +284,7 @@ class NoteDetailState extends State<NoteDetail> {
     } else {
       await HandynoteApi.createNote(title, category, content, priority, color);
     }
-    if (!mounted) return;
-    Navigator.pop(context);
+    moveToLastScreen();
   }
 
   Future<void> deleteNote() async {
