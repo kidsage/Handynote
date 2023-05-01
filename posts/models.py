@@ -21,7 +21,7 @@ class Post(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True, default=None)
     description = models.CharField('DESCRIPTION', max_length=100, blank=True, help_text='simple one-line text')
 
     def __str__(self):

@@ -17,7 +17,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(required=False)
+    category = CategorySerializer(required=False, allow_null=True)
     updated_at = serializers.SerializerMethodField()
 
     class Meta:
@@ -29,19 +29,28 @@ class PostSerializer(serializers.ModelSerializer):
         return obj.updated_at.strftime('%Y-%m-%d %H:%M:%S')
     
     def create(self, validated_data):
-        category_data = validated_data.pop('category')
-        category, _ = Category.objects.get_or_create(**category_data)
+        try:
+            if validated_data['category']:
+                category_data = validated_data.pop('category')
+                category, _ = Category.objects.get_or_create(**category_data)
+        except:
+            category = None
+
         post = Post.objects.create(category=category, **validated_data)
+
         return post
     
     def update(self, instance, validated_data):
-        category_data = validated_data.pop('category')
-        if category_data:
-            category_instance = Category.objects.filter(name=category_data['name']).first()
-            if category_instance:
-                instance.category = category_instance
-            else:
-                category = Category.objects.create(**category_data)
-                instance.category = category
+        try:
+            category_data = validated_data.pop('category')
+            if category_data:
+                category_instance = Category.objects.filter(name=category_data['name']).first()
+                if category_instance:
+                    instance.category = category_instance
+                else:
+                    category = Category.objects.create(**category_data)
+                    instance.category = category
+        except:
+            category = None
 
         return super().update(instance, validated_data)
