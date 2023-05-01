@@ -6,11 +6,9 @@ from posts.models import *
 from .serializers import *
 
 
-#
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         return Post.objects.all().select_related('category')
