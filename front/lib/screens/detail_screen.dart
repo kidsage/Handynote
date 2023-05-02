@@ -38,6 +38,14 @@ class NoteDetailState extends State<NoteDetail> {
   }
 
   @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    categoryController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -93,7 +101,7 @@ class NoteDetailState extends State<NoteDetail> {
                     color = index;
                   });
                   isEdited = true;
-                  widget.note.color = index;
+                  widget.note.priority = 3 - index;
                 },
                 selectedIndex: 3 - widget.note.priority,
               ),
@@ -102,6 +110,8 @@ class NoteDetailState extends State<NoteDetail> {
                   setState(() {
                     color = index;
                   });
+                  isEdited = true;
+                  widget.note.color = color;
                 },
                 selectedIndex: widget.note.color,
               ),
@@ -128,7 +138,11 @@ class NoteDetailState extends State<NoteDetail> {
                   maxLength: 10,
                   controller: categoryController,
                   style: Theme.of(context).textTheme.bodyText2,
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    updateCategory();
+                  },
+                  decoration:
+                      const InputDecoration.collapsed(hintText: 'Category'),
                 ),
               ),
               Expanded(
@@ -273,16 +287,10 @@ class NoteDetailState extends State<NoteDetail> {
     final category = categoryController.text;
 
     if (widget.note.id != null) {
-      await HandynoteApi.updateNote(
-        widget.note.id!,
-        title,
-        category,
-        content,
-        priority,
-        color,
-      );
+      await HandynoteApi.updateNote(widget.note);
     } else {
-      await HandynoteApi.createNote(title, category, content, priority, color);
+      // await HandynoteApi.createNote(title, category, content, priority, color);
+      HandynoteApi.createNote(widget.note);
     }
     moveToLastScreen();
   }
@@ -308,6 +316,6 @@ class NoteDetailState extends State<NoteDetail> {
 
   void updateCategory() {
     isEdited = true;
-    widget.note.category = categoryController.text as Category?;
+    widget.note.category?.name = categoryController.text;
   }
 }
