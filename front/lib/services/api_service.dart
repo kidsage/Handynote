@@ -23,43 +23,17 @@ class HandynoteApi {
     throw Error();
   }
 
-  // Create(Post)
-  static Future<http.Response> createNote(
-      String title, category, content, int priority, color) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/'),
-      headers: {HttpHeaders.contentTypeHeader: 'application/json'},
-      body: jsonEncode({
-        'title': title,
-        'category': {'name': category},
-        'content': content,
-        'priority': priority,
-        'color': color
-      }),
-    );
+  static Future<http.Response> createNote(Note note) async {
+    final response = await http.post(Uri.parse('$baseUrl/'),
+        headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+        body: jsonEncode(note.toJson()));
     return response;
   }
 
-  // Update(Patch)
-  static Future<http.Response> updateNote(
-    int id,
-    String title,
-    String? category,
-    String content,
-    int priority,
-    int color,
-  ) async {
-    final response = await http.patch(
-      Uri.parse('$baseUrl/$id/'),
-      headers: {HttpHeaders.contentTypeHeader: 'application/json'},
-      body: jsonEncode({
-        'title': title,
-        'category': {'name': category},
-        'content': content,
-        'priority': priority,
-        'color': color
-      }),
-    );
+  static Future<http.Response> updateNote(Note note) async {
+    final response = await http.patch(Uri.parse('$baseUrl/${note.id}/'),
+        headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+        body: jsonEncode(note.toJson()));
     return response;
   }
 
