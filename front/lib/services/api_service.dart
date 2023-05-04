@@ -30,10 +30,24 @@ class HandynoteApi {
     return response;
   }
 
+  static Future<http.Response> noCatecreateNote(Note note) async {
+    final response = await http.post(Uri.parse('$baseUrl/'),
+        headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+        body: jsonEncode(note.toNoCateJson()));
+    return response;
+  }
+
   static Future<http.Response> updateNote(Note note) async {
     final response = await http.patch(Uri.parse('$baseUrl/${note.id}/'),
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
         body: jsonEncode(note.toJson()));
+    return response;
+  }
+
+  static Future<http.Response> noCateUpdateNote(Note note) async {
+    final response = await http.patch(Uri.parse('$baseUrl/${note.id}/'),
+        headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+        body: jsonEncode(note.toNoCateJson()));
     return response;
   }
 

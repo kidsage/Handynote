@@ -287,10 +287,18 @@ class NoteDetailState extends State<NoteDetail> {
     final category = categoryController.text;
 
     if (widget.note.id != null) {
-      await HandynoteApi.updateNote(widget.note);
+      if (category == '') {
+        await HandynoteApi.noCateUpdateNote(widget.note);
+      } else {
+        await HandynoteApi.updateNote(widget.note);
+      }
     } else {
       // await HandynoteApi.createNote(title, category, content, priority, color);
-      HandynoteApi.createNote(widget.note);
+      if (category == '') {
+        await HandynoteApi.noCatecreateNote(widget.note);
+      } else {
+        HandynoteApi.createNote(widget.note);
+      }
     }
     moveToLastScreen();
   }

@@ -1,3 +1,22 @@
+class Category {
+  String? name;
+
+  Category({
+    this.name,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      return Category(name: '');
+    }
+    return Category(
+      name: json['name'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {'name': name ?? ''};
+}
+
 class Note {
   int? id;
   String? update;
@@ -29,26 +48,16 @@ class Note {
 
   Map<String, dynamic> toJson() => {
         'title': title,
-        'category': {'name': category},
+        'category': category?.toJson(),
         'content': content,
         'priority': priority,
         'color': color
       };
-}
 
-class Category {
-  String? name;
-
-  Category({
-    this.name,
-  });
-
-  factory Category.fromJson(Map<String, dynamic> json) {
-    if (json == null) {
-      return Category(name: '');
-    }
-    return Category(
-      name: json['name'] ?? '',
-    );
-  }
+  Map<String, dynamic> toNoCateJson() => {
+        'title': title,
+        'content': content,
+        'priority': priority,
+        'color': color
+      };
 }
