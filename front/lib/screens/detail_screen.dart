@@ -282,8 +282,6 @@ class NoteDetailState extends State<NoteDetail> {
   }
 
   Future<void> saveNote() async {
-    final title = titleController.text;
-    final content = contentController.text;
     final category = categoryController.text;
 
     if (widget.note.id != null) {
