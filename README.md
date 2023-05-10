@@ -8,5 +8,4 @@
 > localhost:8000/docs/swagger
 
 ## 진행상황
-> 230318 / API 완성 후 front(flutter) 작업 진행 중  
-> 230410 / finish to front homscreen 
+- 모든 기능이 완성되어서, 곧 readme 작성하도록 하겠습니다.
